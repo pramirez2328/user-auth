@@ -1,3 +1,5 @@
+/// <reference path="./types/express.d.ts" />
+
 import express, { Request, Response } from 'express';
 import { generateToken } from './utils/jwt';
 import { authenticate } from './middleware/auth';
@@ -8,8 +10,8 @@ const port = 3000;
 app.use(express.json());
 
 const users = [
-  { id: 1, username: 'user1', password: 'password1' },
-  { id: 2, username: 'user2', password: 'password2' },
+  { username: 'user1', password: 'password1' },
+  { username: 'user2', password: 'password2' },
 ];
 
 app.post('/login', (req: Request, res: Response) => {
@@ -20,7 +22,7 @@ app.post('/login', (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Invalid username or password.' });
   }
 
-  const token = generateToken({ id: user.id, username: user.username });
+  const token = generateToken({ username, password });
   res.json({ token });
 });
 
