@@ -1,10 +1,13 @@
 {
   "name": "user-auth",
   "version": "1.0.0",
-  "description": "",
+  "description": "login and register user with jwt token",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "serve": "node dist/index.js",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +17,13 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "nodemon": "^3.1.3"
   }
 }
