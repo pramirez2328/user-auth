@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const secretKey = 'your_secret_key'; // Use a more secure key in a real application
+const secretKey = process.env.JWT_SECRET || 'defaultSecretKey';
 
 export const generateToken = (payload: object): string => {
   return jwt.sign(payload, secretKey, { expiresIn: '1h' });
