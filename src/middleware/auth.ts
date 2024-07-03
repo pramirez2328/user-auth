@@ -1,24 +1,26 @@
-// src/middleware/auth.ts
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../utils/jwt';
+import jwt from 'jsonwebtoken';
+import { User } from '../models/User';
 
-interface DecodedToken {
-  username: string;
-  password: string;
-}
-
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers['authorization']?.split(' ')[1];
+export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
+    return res.status(401).json({ message: 'No token provided.' });
   }
 
   try {
-    const decoded = verifyToken(token) as DecodedToken;
-    req.user = { username: decoded.username, password: decoded.password };
+    const decoded = jwt.verify(token, 'your_secret_key') as { username: string };
+
+    const user = await User.findOne({ username: decoded.username });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid token.' });
+    }
+
+    req.user = user;
     next();
   } catch (err) {
-    return res.status(401).json({ message: 'Invalid token.' });
+    return res.status(401).json({ message: 'Failed to authenticate token.' });
   }
 };

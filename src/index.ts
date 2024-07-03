@@ -1,22 +1,30 @@
-/// <reference path="./types/express.d.ts" />
-
 import express, { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { generateToken } from './utils/jwt';
 import { authenticate } from './middleware/auth';
+import { User } from './models/User';
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-const users = [
-  { username: 'user1', password: 'password1' },
-  { username: 'user2', password: 'password2' },
-];
+// Connect to MongoDB
+mongoose
+  .connect('mongodb://localhost:27017/myapp', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  } as mongoose.ConnectOptions)
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB', err);
+  });
 
-app.post('/login', (req: Request, res: Response) => {
+app.post('/login', async (req: Request, res: Response) => {
   const { username, password } = req.body;
-  const user = users.find((u) => u.username === username && u.password === password);
+  const user = await User.findOne({ username, password });
 
   if (!user) {
     return res.status(400).json({ message: 'Invalid username or password.' });

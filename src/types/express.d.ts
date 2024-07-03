@@ -1,7 +1,6 @@
-import { Request } from 'express';
-
+import { UserDocument } from '../models/User';
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: { username: string; password: string };
+    user?: UserDocument;
   }
 }
