@@ -1,11 +1,9 @@
-import 'express';
+import { User } from '../models/User';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: {
-      username: string;
-      password: string;
-      fullname: string;
-    };
+declare global {
+  namespace Express {
+    interface Request {
+      user?: User;
+    }
   }
 }
